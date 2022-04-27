@@ -17,7 +17,8 @@ import Fade from '@mui/material/Fade'
 import Grid from '@material-ui/core/Grid'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-
+import CircularProgress from '@mui/material/CircularProgress'
+import { Alert, Snackbar } from '@mui/material'
 const Cryptr = require('cryptr')
 
 const cryptr = new Cryptr('myTotalySecretKey')
@@ -44,6 +45,23 @@ const ProceedSendFastPayment = (props) => {
 
   // for modal
   const [open, setOpen] = React.useState(false)
+  const [openBD, setOpenBD] = React.useState(false)
+  const [openSnack, setOpenSnack] = React.useState(false)
+  const handleOpenBD = () => {
+    setOpenBD(true)
+  }
+  const handleCloseBD = () => {
+    setOpenBD(false)
+  }
+
+  const handleCloseSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpenSnack(false)
+  }
+
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
 
@@ -57,6 +75,7 @@ const ProceedSendFastPayment = (props) => {
 
   const submitMoney = async () => {
     changeButtonState(true)
+    handleOpenBD()
     let privateKey = ''
     axios
       .post(`https://rest.nearapi.org/parse_seed_phrase`, {
@@ -110,7 +129,9 @@ const ProceedSendFastPayment = (props) => {
     console.log('done')
     // trial end---------------------------------------------------------------------
 
+    setOpenSnack(true)
     changeButtonState(false)
+    handleCloseBD()
   }
 
   const onSubmit2 = () => {
@@ -132,7 +153,7 @@ const ProceedSendFastPayment = (props) => {
             <Card sx={{ textAlign: 'center', minWidth: 400 }}>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                  Money Transfer ASLI
+                  Money Transfer
                 </Typography>
                 <Typography variant="body2" gutterBottom color="text.secondary">
                   Send money to someone by filling the form given below and
@@ -263,6 +284,26 @@ const ProceedSendFastPayment = (props) => {
       </Typography>
 
       {Payment()}
+
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert
+          onClose={handleCloseSnack}
+          severity={'success'}
+          sx={{ width: '100%' }}
+        >
+          {'Money Sent'}
+        </Alert>
+      </Snackbar>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={openBD}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   )
 }

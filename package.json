@@ -38,6 +38,8 @@
     "@mui/icons-material": "^5.2.0",
     "@mui/lab": "^5.0.0-alpha.57",
     "@mui/material": "^5.2.1",
+    "@sendgrid/client": "^7.6.2",
+    "@sendgrid/mail": "^7.6.2",
     "as-uuid": "^0.0.4",
     "autosuggest-highlight": "^3.2.0",
     "axios": "^0.24.0",

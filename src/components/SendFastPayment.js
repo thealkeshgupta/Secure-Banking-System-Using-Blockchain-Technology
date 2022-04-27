@@ -47,6 +47,7 @@ const SendFastPayment = (props) => {
 
   const showScanner = () => {
     if (isWatching) {
+      console.log('start scanner')
       return <QRScan onFind={onFind} />
     } else {
       return <></>
@@ -54,9 +55,11 @@ const SendFastPayment = (props) => {
   }
 
   const onFind = async (value) => {
+    console.log('scanning...')
     try {
       if (!!value) {
         const data = JSON.parse(value)
+        console.log(data)
         if (
           data.hasOwnProperty('amount') &&
           +data.amount > 0 &&

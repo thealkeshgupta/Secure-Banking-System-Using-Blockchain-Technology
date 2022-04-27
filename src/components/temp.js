@@ -15,6 +15,8 @@ import { styled } from '@mui/material/styles'
 import PaymentsSharpIcon from '@mui/icons-material/PaymentsSharp'
 import CloseIcon from '@mui/icons-material/Close'
 import DoneIcon from '@mui/icons-material/Done'
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const nearAPI = require('near-api-js')
 import axios from 'axios'
@@ -66,6 +68,13 @@ export default function RequestedByMenu() {
   const [openSnack, setOpenSnack] = React.useState(false)
   const [snackType, setSnackType] = React.useState('')
   const [buttonState, changeButtonState] = React.useState(false)
+  const [openBD, setOpenBD] = React.useState(false)
+  const handleOpenBD = () => {
+    setOpenBD(true)
+  }
+  const handleCloseBD = () => {
+    setOpenBD(false)
+  }
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
       return
@@ -91,6 +100,7 @@ export default function RequestedByMenu() {
 
   const acceptMoneyRequest = async (index) => {
     changeButtonState(true)
+    handleOpenBD()
     let privateKey = ''
     axios
       .post(`https://rest.nearapi.org/parse_seed_phrase`, {
@@ -155,7 +165,6 @@ export default function RequestedByMenu() {
       receiver: requestedByDetails[index][4],
       requestId: requestedByDetails[index][1],
     })
-
     setOpenSnack(true)
     setItemIndex(-1)
     let tempRequestedByDetails = requestedByDetails.filter(
@@ -165,6 +174,7 @@ export default function RequestedByMenu() {
     setRequestedByDetails(tempRequestedByDetails)
 
     changeButtonState(false)
+    handleCloseBD()
     setItemIndex(-1)
     setPass('')
     setShowPaymentForm(false)
@@ -172,6 +182,7 @@ export default function RequestedByMenu() {
 
   const rejectMoneyRequest = async (index) => {
     changeButtonState(true)
+    handleOpenBD()
     console.log('delete', requestedByDetails[index][1])
     setSnackType('rejected')
     await window.contract.removeMoneyRequest({
@@ -189,6 +200,7 @@ export default function RequestedByMenu() {
     setRequestedByDetails(tempRequestedByDetails)
 
     changeButtonState(false)
+    handleCloseBD()
     setItemIndex(-1)
     setPass('')
     setShowPaymentForm(false)
@@ -294,6 +306,12 @@ export default function RequestedByMenu() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 9 }}
+            open={openBD}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
           {/* <Box sx={style}>
           <Typography
             color={'#000000'}
@@ -398,6 +416,7 @@ export default function RequestedByMenu() {
           </Card>
         </Box>
       </Modal>
+
       <Snackbar
         open={openSnack}
         autoHideDuration={6000}
@@ -408,9 +427,8 @@ export default function RequestedByMenu() {
           severity={snackType === 'accepted' ? 'success' : 'error'}
           sx={{ width: '100%' }}
         >
-          {snackType === 'rejected' && 'Request rejected successfully'}
-          {snackType === 'accepted' &&
-            'Request accepted & money sent successfully'}
+          {snackType === 'rejected' && 'Money request rejected'}
+          {snackType === 'accepted' && 'Money sent successfully'}
         </Alert>
       </Snackbar>
     </React.Fragment>

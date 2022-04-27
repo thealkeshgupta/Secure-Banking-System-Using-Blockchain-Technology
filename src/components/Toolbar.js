@@ -17,6 +17,7 @@ import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import FaceIcon from '@mui/icons-material/Face'
 import RequestedByMenu from './temp'
+import logo from '../assets/logo.png'
 import { Box } from '@mui/material'
 
 const styles = (theme) => ({
@@ -227,12 +228,11 @@ class ToolbarComponent extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography className={classes.title} variant="h6" noWrap>
-              <Link href="/" color="inherit" underline="none">
-                {' '}
-                BlockBank{' '}
-              </Link>
-            </Typography>
+            {/* <Typography className={classes.title} variant="h6" noWrap> */}
+            <Link href="/" color="inherit" underline="none">
+              <img src={logo} height="40" />
+            </Link>
+            {/* </Typography> */}
             {/* <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />

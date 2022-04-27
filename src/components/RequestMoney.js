@@ -16,6 +16,9 @@ import Grid from '@material-ui/core/Grid'
 import Autocomplete from '@mui/material/Autocomplete'
 import parse from 'autosuggest-highlight/parse'
 import match from 'autosuggest-highlight/match'
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
+import { Alert, Snackbar } from '@mui/material'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -60,6 +63,22 @@ const RequestMoney = (props) => {
   const [value, setValue] = React.useState('')
   const [pass, setPass] = React.useState('')
   const [receiverList, setReceiverList] = React.useState([])
+  const [openBD, setOpenBD] = React.useState(false)
+  const [openSnack, setOpenSnack] = React.useState(false)
+  const handleOpenBD = () => {
+    setOpenBD(true)
+  }
+  const handleCloseBD = () => {
+    setOpenBD(false)
+  }
+
+  const handleCloseSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpenSnack(false)
+  }
 
   // const onSubmit = async (data) => {
   //   console.log(data.amount + " & " + data.message + " & " + data.receiver);
@@ -102,6 +121,7 @@ const RequestMoney = (props) => {
   // };
 
   const onSubmit = async (data) => {
+    handleOpenBD()
     if (+data.amount > 0) {
       changeButtonState(true)
 
@@ -114,7 +134,10 @@ const RequestMoney = (props) => {
       })
 
       changeButtonState(false)
+
+      setOpenSnack(true)
     }
+    handleCloseBD()
   }
 
   useEffect(() => {
@@ -140,82 +163,83 @@ const RequestMoney = (props) => {
     receiverListFunction()
   }, [])
   return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justify="center"
-      style={{ minHeight: '100vh', marginTop: '15vh' }}
-    >
-      <Grid item xs={12}>
-        <Card sx={{ maxWidth: 355 }}>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Money Request
-            </Typography>
-            <Typography variant="body2" gutterBottom color="text.secondary">
-              Request money from someone by filling the form given below and
-              submitting it.
-            </Typography>
-            <br />
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Autocomplete
-                value={value}
-                onChange={(event, newValue) => {
-                  setValue(newValue)
-                }}
-                id="highlights-demo"
-                options={receiverList}
-                getOptionLabel={(option) => option}
-                renderInput={(params) => (
-                  <TextField
-                    required
-                    fullWidth
-                    {...params}
-                    label="Request From"
-                    helperText="Please enter the account address"
-                    {...register('receiver')}
-                  />
-                )}
-                renderOption={(props, option, { inputValue }) => {
-                  const matches = match(option, inputValue)
-                  const parts = parse(option, matches)
+    <>
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh', marginTop: '15vh' }}
+      >
+        <Grid item xs={12}>
+          <Card sx={{ maxWidth: 355 }}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Money Request
+              </Typography>
+              <Typography variant="body2" gutterBottom color="text.secondary">
+                Request money from someone by filling the form given below and
+                submitting it.
+              </Typography>
+              <br />
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Autocomplete
+                  value={value}
+                  onChange={(event, newValue) => {
+                    setValue(newValue)
+                  }}
+                  id="highlights-demo"
+                  options={receiverList}
+                  getOptionLabel={(option) => option}
+                  renderInput={(params) => (
+                    <TextField
+                      required
+                      fullWidth
+                      {...params}
+                      label="Request From"
+                      helperText="Please enter the account address"
+                      {...register('receiver')}
+                    />
+                  )}
+                  renderOption={(props, option, { inputValue }) => {
+                    const matches = match(option, inputValue)
+                    const parts = parse(option, matches)
 
-                  return (
-                    <li {...props}>
-                      <div>
-                        {parts.map((part, index) => (
-                          <span
-                            key={index}
-                            style={{
-                              fontWeight: part.highlight ? 700 : 400,
-                              color: part.highlight ? '#0b9e17' : '#000000',
-                            }}
-                          >
-                            {part.text}
-                          </span>
-                        ))}
-                      </div>
-                    </li>
-                  )
-                }}
-              />
-              <br />
-              <TextField
-                required
-                fullWidth
-                helperText="Please enter the amount to be sent"
-                id="demo-helper-text-misaligned"
-                label="Amount"
-                InputProps={{
-                  inputComponent: NumberFormatCustom,
-                }}
-                {...register('amount')}
-              />
-              <br />
-              <br />
-              {/* <TextField
+                    return (
+                      <li {...props}>
+                        <div>
+                          {parts.map((part, index) => (
+                            <span
+                              key={index}
+                              style={{
+                                fontWeight: part.highlight ? 700 : 400,
+                                color: part.highlight ? '#0b9e17' : '#000000',
+                              }}
+                            >
+                              {part.text}
+                            </span>
+                          ))}
+                        </div>
+                      </li>
+                    )
+                  }}
+                />
+                <br />
+                <TextField
+                  required
+                  fullWidth
+                  helperText="Please enter the amount to be sent"
+                  id="demo-helper-text-misaligned"
+                  label="Amount"
+                  InputProps={{
+                    inputComponent: NumberFormatCustom,
+                  }}
+                  {...register('amount')}
+                />
+                <br />
+                <br />
+                {/* <TextField
                 required
                 fullWidth
                 helperText="Please enter the receiver account id"
@@ -228,32 +252,52 @@ const RequestMoney = (props) => {
               />
               <br />
               <br /> */}
-              <TextField
-                fullWidth
-                multiline
-                rows={4}
-                helperText="Please enter your message(if any)"
-                id="demo-helper-text-misaligned"
-                label="Money Request Intent"
-                {...register('message')}
-              />
-              <br />
-              <br />
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  helperText="Please enter your message(if any)"
+                  id="demo-helper-text-misaligned"
+                  label="Money Request Intent"
+                  {...register('message')}
+                />
+                <br />
+                <br />
 
-              <Button
-                disabled={buttonState}
-                fullWidth
-                type="submit"
-                variant="contained"
-                endIcon={<SendIcon />}
-              >
-                Confirm
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+                <Button
+                  disabled={buttonState}
+                  fullWidth
+                  type="submit"
+                  variant="contained"
+                  endIcon={<SendIcon />}
+                >
+                  Confirm
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-    </Grid>
+      <Snackbar
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert
+          onClose={handleCloseSnack}
+          severity={'success'}
+          sx={{ width: '100%' }}
+        >
+          {'Request sent'}
+        </Alert>
+      </Snackbar>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={openBD}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </>
   )
 }
 

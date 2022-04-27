@@ -17,6 +17,7 @@ import PaymentIcon from '@mui/icons-material/Payment'
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner'
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale'
 import ForwardToInboxRoundedIcon from '@mui/icons-material/ForwardToInboxRounded'
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
@@ -91,7 +92,7 @@ class DrawerComponent extends React.Component {
           </ListItem>
 
           <ListItem
-            selected={window.location.pathname === '/fastpayment'}
+            selected={window.location.pathname === '/sendfastpayment'}
             button
             component="a"
             href="/sendfastpayment"
@@ -104,7 +105,7 @@ class DrawerComponent extends React.Component {
           </ListItem>
 
           <ListItem
-            selected={window.location.pathname === '/fastpayment'}
+            selected={window.location.pathname === '/request_money'}
             button
             component="a"
             href="/request_money"
@@ -114,6 +115,19 @@ class DrawerComponent extends React.Component {
               <ForwardToInboxRoundedIcon />
             </ListItemIcon>
             <ListItemText primary={'Request Money'} />
+          </ListItem>
+
+          <ListItem
+            selected={window.location.pathname === '/transaction_history'}
+            button
+            component="a"
+            href="/transaction_history"
+            key={'transaction_history'}
+          >
+            <ListItemIcon>
+              <HistoryRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary={'Transactions History'} />
           </ListItem>
           {/* {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem button key={text}>
@@ -125,7 +139,7 @@ class DrawerComponent extends React.Component {
           ))} */}
         </List>
         <Divider />
-        <List>
+        {/* <List>
           {['Menu Item 1', 'Menu Item 2', 'Menu Item 3'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
@@ -134,7 +148,7 @@ class DrawerComponent extends React.Component {
               <ListItemText primary={text} />
             </ListItem>
           ))}
-        </List>
+        </List> */}
       </div>
     )
 

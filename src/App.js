@@ -42,21 +42,21 @@ export default function App() {
       const isRegisteredFunction = async () => {
         console.log('fjsrhng')
 
-        let bal = await window.contract.getWalletBalance({
-          userId: window.accountId,
-        })
-        console.log(bal / 1000000000000000000000000)
+        // let bal = await window.contract.getWalletBalance({
+        //   userId: window.accountId,
+        // })
+        // console.log(bal / 1000000000000000000000000)
 
-        price
-          .getCryptoPrice('USD', 'NEAR')
-          .then((obj) => {
-            // Base for ex - USD, Crypto for ex - ETH
-            console.log(obj.price * (bal / 1000000000000000000000000))
-            console.log(obj.price)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        // price
+        //   .getCryptoPrice('USD', 'NEAR')
+        //   .then((obj) => {
+        //     // Base for ex - USD, Crypto for ex - ETH
+        //     console.log(obj.price * (bal / 1000000000000000000000000))
+        //     console.log(obj.price)
+        //   })
+        //   .catch((err) => {
+        //     console.log(err)
+        //   })
       }
       isRegisteredFunction()
     }
